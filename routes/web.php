@@ -16,11 +16,20 @@ use App\Http\Controllers\TodosController;
 */
 
 Route::get('/todos', [TodosController::class, 'index']);
-Route::get('/todos/create', [TodosController::class, 'create']);
-Route::post('/todos/create', [TodosController::class, 'store']);
-Route::get('/todos/edit', [TodosController::class, 'edit']);
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/todos/create', [TodosController::class, 'create']);
+    Route::post('/todos/create', [TodosController::class, 'store']);
+    Route::get('/todos/edit', [TodosController::class, 'edit']);
+    Route::delete('/todos', [TodosController::class], 'delete');
+});
+
 
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
